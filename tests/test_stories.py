@@ -37,15 +37,20 @@ def _ok(name, results, index):
 
 # ---------------------------------------------------------------------------------------------------
 # Standard: k=0 >= 140 %, k=4 <= 7 %, volle Vorschau exakt (<= 0,01 %)
+#
+# Die Kriterien pruefen ">=" / "<=", nicht ">" / "<" - eine Aussage wie "k0 >= 140,5" wuerde denselben
+# Wahrheitswert liefern wie "k0 > 140,5" und den Operator NICHT von seinem strengen Gegenstueck
+# unterscheiden. Deshalb liegt der bestandene Fall hier GENAU auf der Schwelle (nicht knapp darueber),
+# der nicht bestandene Fall klar daneben.
 # ---------------------------------------------------------------------------------------------------
 def test_standard_k0_threshold_tips_at_140_percent():
-    assert _ok("Standard", [fake(k0=140.5, k4=0)], 0) is True
-    assert _ok("Standard", [fake(k0=139.5, k4=0)], 0) is False
+    assert _ok("Standard", [fake(k0=140, k4=0)], 0) is True         # genau auf der Schwelle: >=, nicht >
+    assert _ok("Standard", [fake(k0=139, k4=0)], 0) is False
 
 
 def test_standard_k4_threshold_tips_at_7_percent():
-    assert _ok("Standard", [fake(k0=200, k4=6.5)], 1) is True
-    assert _ok("Standard", [fake(k0=200, k4=7.5)], 1) is False
+    assert _ok("Standard", [fake(k0=200, k4=7)], 1) is True          # genau auf der Schwelle: <=, nicht <
+    assert _ok("Standard", [fake(k0=200, k4=8)], 1) is False
 
 
 def test_standard_full_lookahead_threshold_tips_at_0_01_percent():
@@ -61,52 +66,54 @@ def test_standard_full_lookahead_threshold_tips_at_0_01_percent():
 # Kurze Route: k=3 <= 10 %, k=0 >= 170 %
 # ---------------------------------------------------------------------------------------------------
 def test_kurze_route_k3_threshold_tips_at_10_percent():
-    assert _ok("Kurze Route", [fake(k3=9.5, k0=200)], 0) is True
-    assert _ok("Kurze Route", [fake(k3=10.5, k0=200)], 0) is False
+    assert _ok("Kurze Route", [fake(k3=10, k0=200)], 0) is True
+    assert _ok("Kurze Route", [fake(k3=11, k0=200)], 0) is False
 
 
 def test_kurze_route_k0_threshold_tips_at_170_percent():
-    assert _ok("Kurze Route", [fake(k3=0, k0=170.5)], 1) is True
-    assert _ok("Kurze Route", [fake(k3=0, k0=169.5)], 1) is False
+    assert _ok("Kurze Route", [fake(k3=0, k0=170)], 1) is True
+    assert _ok("Kurze Route", [fake(k3=0, k0=169)], 1) is False
 
 
 # ---------------------------------------------------------------------------------------------------
 # Lange Route: k=3 >= 20 %, k=6 < 3 %
 # ---------------------------------------------------------------------------------------------------
 def test_lange_route_k3_threshold_tips_at_20_percent():
-    assert _ok("Lange Route", [fake(k3=20.5, k6=0)], 0) is True
-    assert _ok("Lange Route", [fake(k3=19.5, k6=0)], 0) is False
+    assert _ok("Lange Route", [fake(k3=20, k6=0)], 0) is True
+    assert _ok("Lange Route", [fake(k3=19, k6=0)], 0) is False
 
 
 def test_lange_route_k6_threshold_tips_at_3_percent():
-    assert _ok("Lange Route", [fake(k3=100, k6=2.5)], 1) is True
-    assert _ok("Lange Route", [fake(k3=100, k6=3.5)], 1) is False
+    """Einziges Kriterium mit einem STRENGEN Vergleich ("< 3", nicht "<= 3"): genau auf der Schwelle
+    (3 %) gilt NICHT mehr als erfuellt, erst knapp darunter."""
+    assert _ok("Lange Route", [fake(k3=100, k6=2)], 1) is True
+    assert _ok("Lange Route", [fake(k3=100, k6=3)], 1) is False       # genau 3 % -> "< 3" ist falsch
 
 
 # ---------------------------------------------------------------------------------------------------
 # Unruhiges Aufkommen: k=0 >= 170 %, k=4 <= 10 %
 # ---------------------------------------------------------------------------------------------------
 def test_unruhig_k0_threshold_tips_at_170_percent():
-    assert _ok("Unruhiges Aufkommen", [fake(k0=170.5, k4=0)], 0) is True
-    assert _ok("Unruhiges Aufkommen", [fake(k0=169.5, k4=0)], 0) is False
+    assert _ok("Unruhiges Aufkommen", [fake(k0=170, k4=0)], 0) is True
+    assert _ok("Unruhiges Aufkommen", [fake(k0=169, k4=0)], 0) is False
 
 
 def test_unruhig_k4_threshold_tips_at_10_percent():
-    assert _ok("Unruhiges Aufkommen", [fake(k0=200, k4=9.5)], 1) is True
-    assert _ok("Unruhiges Aufkommen", [fake(k0=200, k4=10.5)], 1) is False
+    assert _ok("Unruhiges Aufkommen", [fake(k0=200, k4=10)], 1) is True
+    assert _ok("Unruhiges Aufkommen", [fake(k0=200, k4=11)], 1) is False
 
 
 # ---------------------------------------------------------------------------------------------------
 # Teures Notleasing: k=0 >= 200 %, k=4 <= 12 %
 # ---------------------------------------------------------------------------------------------------
 def test_teuer_k0_threshold_tips_at_200_percent():
-    assert _ok("Teures Notleasing", [fake(k0=200.5, k4=0)], 0) is True
-    assert _ok("Teures Notleasing", [fake(k0=199.5, k4=0)], 0) is False
+    assert _ok("Teures Notleasing", [fake(k0=200, k4=0)], 0) is True
+    assert _ok("Teures Notleasing", [fake(k0=199, k4=0)], 0) is False
 
 
 def test_teuer_k4_threshold_tips_at_12_percent():
-    assert _ok("Teures Notleasing", [fake(k0=300, k4=11.5)], 1) is True
-    assert _ok("Teures Notleasing", [fake(k0=300, k4=12.5)], 1) is False
+    assert _ok("Teures Notleasing", [fake(k0=300, k4=12)], 1) is True
+    assert _ok("Teures Notleasing", [fake(k0=300, k4=13)], 1) is False
 
 
 def test_unknown_preset_name_raises():

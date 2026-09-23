@@ -46,6 +46,15 @@ def test_parse_setting_rounds_not_truncates_at_step_boundary():
     assert P.parse_setting(spec, "130") == 150      # (130-50)/50 = 1.6 -> round = 2 -> 50 + 100
 
 
+def test_k_star_default_applies_the_1_6_factor():
+    """Regressionstest: der Default MUSS die Faustregel k* ~= 1,6 x Vorlaufzeit verwenden, nicht nur
+    die (ungewichtete) Vorlaufzeit selbst."""
+    # speed=45 -> approx_lead = max(1.0, 45/45) = 1.0 -> round(1.6 * 1.0) = round(1.6) = 2
+    assert P.k_star_default(10, 45) == 2
+    # speed=15 -> approx_lead = max(1.0, 45/15) = 3.0 -> round(1.6 * 3.0) = round(4.8) = 5
+    assert P.k_star_default(10, 15) == 5
+
+
 def test_k_star_default_is_within_bounds():
     for n_periods in range(6, 15):
         for speed in range(10, 41, 5):

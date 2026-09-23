@@ -41,7 +41,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 | Frage | Befund | Test |
 |---|---|---|
-| Wie teuer ist reine Reaktion? | k=0 kostet **+153 %** gegenüber dem Optimum in der Standardinstanz; über alle fünf Presets zwischen +148 % und +279 % | `test_preset_stories.py`, `test_evaluation.py` |
+| Wie teuer ist reine Reaktion? | k=0 kostet **+156 %** gegenüber dem Optimum in der Standardinstanz (Population 40 Instanzen); über die vier Presets mit einem k=0-Kriterium zwischen +156 % und +234 % | `test_preset_stories.py`, `test_evaluation.py` |
 | Wie schnell schließt sich die Lücke? | Bei k=4 (≈1,6× mittlere Vorlaufzeit) nur noch **+5,2 %** Aufschlag in der Standardinstanz | `test_preset_stories.py` |
 | Skaliert die nötige Vorschau mit der Vorlaufzeit oder mit T? | Mit der Vorlaufzeit: kurze Routen brauchen ab k≈3 kaum noch Vorschau (+8,3 % bei k=3), lange Routen erst ab k≈6 (+2,6 % bei k=6) – nie bei fast dem ganzen Horizont | `test_preset_stories.py` |
 | Ist mehr Vorschau je verschlechternd? | Nein: Monotonie über 25 Zufallsinstanzen ausnahmslos bestätigt, 0 Verletzungen | `test_rolling.py::test_monotonicity_more_lookahead_never_hurts` |
@@ -76,7 +76,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 ## Tests
 
-`python -m pytest tests/ -v` – 236 Tests, rund 3 Minuten. Zusammensetzung:
+`python -m pytest tests/ -v` – 237 Tests, rund 3 Minuten. Zusammensetzung:
 
 - **Szenario** (`test_scenario.py`): Häfen, Distanzen, Vorlaufzeit-Matrix, Netto-Einspeisung (Determinismus, Summe nahe 0), Fehlerfälle (zu wenige Häfen/Perioden).
 - **Min-Cost-Flow** (`test_flow.py`): Handinstanzen aus `messreihe_ecr/check.py` (Kausalität – Überschuss vor/nach Bedarf), Flusserhaltung, k=0 ohne jede Kante.
@@ -93,8 +93,15 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 - **End-to-End** (`test_app.py`, AppTest): Skelett und Footer, jedes Preset, Permalink mit berechneter Grenze, alle Regler an Min und Max, die bedingte Meldung in allen drei Zuständen, Urteil in
   allen Zuständen, Vergleichstabelle, PDF, Texte.
 
-Zusätzlich ein Fehler-Einbau-Test (`tools/mutation_check.py`, 35 Mutanten über `lcr_flow`, `lcr_scenario`, `lcr_rolling`, `lcr_evaluation`, `lcr_presets`, `lcr_stories`) – siehe Testergebnis-Notiz
-unten.
+Zusätzlich ein Fehler-Einbau-Test (`tools/mutation_check.py`, 40 Mutanten über `lcr_flow`, `lcr_scenario`, `lcr_rolling`, `lcr_evaluation`, `lcr_presets`, `lcr_stories`): **34 gefunden, 6 überlebt,
+0 Fehler in der Mutantenliste.** Alle sechs Überlebenden sind gleichwertig (kein sichtbarer Unterschied im Verhalten):
+
+- Zwei betreffen Knoten mit Netto-Einspeisung genau 0 (`value > 0` → `>=`, `elif value < 0` → `<=`): der dabei zusätzlich eingefügte Graph-Kante hat Kapazität 0 und trägt nie Fluss.
+- Eine betrifft die Dijkstra-Tie-Break-Regel (`nd < dist[to]` → `<=`): ändert bei gleicher Distanz höchstens, welcher von mehreren gleich teuren Wegen gewählt wird, nie die Kosten.
+- Zwei betreffen die Pending-Buchhaltung in `lcr_rolling.py` (`arr > t + 1` → `>=`, `arr < T` → `<=`): die erste ist durch die vorangehende `if`-Verzweigung bereits ausgeschlossen, die zweite
+  legt einen Eintrag für eine Periode an, die die äußere Schleife nie erreicht (beides tote Fälle, kein Verhaltensunterschied).
+- Eine betrifft die Klarheitsschwelle des Urteils genau bei zwei Standardfehlern (`<=` → `<`): eine Gleitkomma-Grenze, die sich nicht bit-exakt und zugleich robust testen lässt (derselbe
+  akzeptierte Fall wie in `reefer-demo`).
 
 ## Dateistruktur
 

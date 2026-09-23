@@ -12,7 +12,7 @@ eigenen Prozentwert überproportional verzerren (siehe `lcr_evaluation.mean_mark
 
 | Preset | Kriterium | Gemessen |
 |---|---|---|
-| Standard | k=0 >= 140 % | +153,4 % |
+| Standard | k=0 >= 140 % | +155,8 % |
 | Standard | k=4 <= 7 % | +5,2 % |
 | Standard | k=9 (volle Vorschau) = Optimum | +0,0000 % |
 | Kurze Route | k=3 <= 10 % | +8,3 % |
