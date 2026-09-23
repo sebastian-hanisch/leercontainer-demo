@@ -131,6 +131,16 @@ Zusätzlich ein Fehler-Einbau-Test (`tools/mutation_check.py`, 40 Mutanten über
 - **Vergleich gegen eine einfache Faustregel-Heuristik** (z. B. „nächstgelegener Überschusshafen zuerst") statt nur gegen sich selbst mit kürzerem Fenster.
 - **Exakter Löser als eigener Tab**: nicht nötig – die volle Vorschau (k=Perioden−1) IST bereits die exakte Referenz, explizit im Text statt in einem separaten Tab.
 
+## Verwandte Demos mit demselben mathematischen Modell
+
+Verschiedene Themen im Portfolio teilen (fast) dasselbe Modell. Vor einer neuen Demo-Idee deshalb das
+Modell vergleichen, nicht die Kulisse (Stand 2026-09-23):
+
+- **Rückladungen finden / Leerfahrten im Straßengüterverkehr reduzieren** ist derselbe Bestandsausgleich im Zeit-Raum-Netz
+  mit Lkw statt Containern (Min-Cost-Flow, Vorschau-Fenster). Als Dopplung verworfen. Ob der Befund "Vorschau von etwa dem
+  1,5- bis 2-Fachen der Vorlaufzeit genügt" dort ebenfalls gilt, ist eine Vermutung, nicht gemessen. Ein VRP mit
+  Rückladungen (Backhauls) auf Tourenebene wäre ein Routing-Modell, kein Fluss.
+
 ## Lokal ausführen
 
 ```bash
