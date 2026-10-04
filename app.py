@@ -83,7 +83,7 @@ with st.sidebar:
     _dist_preview = SC.dist_matrix(SC.make_ports(int(n_ports), int(_seed_now)))
     _lead_preview = SC.mean_lead(dict(p=int(n_ports), lead=SC.lead_matrix(_dist_preview, _speed_now)))
     speed = st.slider("Schiffsgeschwindigkeit (relativ)", *bounds("speed_slider"), step=C.SPEED_STEP, key="speed_slider",
-                      help=f"Steuert die Vorlaufzeit = Distanz/Geschwindigkeit (aufgerundet auf mindestens 1 Periode); bei dieser Einstellung im Mittel {_lead_preview:.2f} Perioden.")
+                      help=f"Steuert die Vorlaufzeit = Distanz/Geschwindigkeit (auf ganze Perioden gerundet, mindestens 1 Periode); bei dieser Einstellung im Mittel {_lead_preview:.2f} Perioden.")
     sigma = st.slider("Volatilität des Aufkommens", *bounds("sigma_slider"), key="sigma_slider", help="Streuung der Netto-Einspeisung je Hafen und Periode um die feste Import-/Export-Neigung.")
     penalty = st.slider("Notleasing-Kosten je Container", *bounds("penalty_slider"), step=C.PENALTY_STEP, key="penalty_slider",
                         help="Strafe je Container, dessen Bedarf nicht rechtzeitig aus Bestand oder Transport gedeckt ist (kurzfristiges Zumieten/Chartern).")
@@ -206,7 +206,7 @@ with st.expander("Wie funktioniert diese Demo?"):
         """
 **Das Netz.** Ein Zeit-Raum-Netz aus Häfen × Perioden. Jeder Hafen hat eine Netto-Einspeisung je Periode (positiv = freiwerdende Leercontainer, negativ = Bedarf), über den Horizont auf Summe 0
 zentriert (kein globaler Dauerüberschuss/-mangel). Haltekanten (ein Hafen zur nächsten Periode) kosten wenig, Transportkanten (ein Hafen zu einem anderen) kosten distanzabhängig und brauchen eine
-**Vorlaufzeit** = Distanz/Geschwindigkeit (aufgerundet auf mindestens 1 Periode) - nichts kann rückwärts in der Zeit fließen. Statt einer harten Bilanzpflicht gibt es eine **Notleasing-Kante**:
+**Vorlaufzeit** = Distanz/Geschwindigkeit (auf ganze Perioden gerundet, mindestens 1 Periode) - nichts kann rückwärts in der Zeit fließen. Statt einer harten Bilanzpflicht gibt es eine **Notleasing-Kante**:
 unbefriedigter Bedarf löst eine feste Strafe je Container aus, realistisch gedeutet als kurzfristiges Zumieten/Chartern. Das macht das Modell immer lösbar, auch wenn ein Bedarf durch die
 Zeitstruktur real nicht mehr rechtzeitig erreichbar ist.
 
@@ -259,6 +259,6 @@ st.markdown("---")
 
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
-    "Operations Research und Machine Learning. Interesse an einer maßgeschneiderten Lösung für "
-    "Ihr Unternehmen? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html)"
+    "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
+    "Mehr zum Thema: [Seefracht optimieren](https://sebastianhanisch.net/seefracht-optimierung.html)."
 )

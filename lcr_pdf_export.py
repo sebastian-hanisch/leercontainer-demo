@@ -142,7 +142,7 @@ def generate_lcr_pdf(p, seed, inst, outcomes, diag, k_star, sample=None, costs=N
         pdf.set_font("Helvetica", "", 9)
         pdf.multi_cell(0, 5, pdf_text("- " + verdict_text(v1, "Eingestellte Vorschau gegen rein reaktiv")), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
         pdf.multi_cell(0, 5, pdf_text("- " + verdict_text(v2, "Eingestellte Vorschau gegen das Optimum")), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
-        note(f"Basis: {len(sample)} Instanzen (Seeds 0-{len(sample) - 1}, nicht der eingestellte Seed) mit den eingestellten Werten. Klar heisst: Unterschied größer als zwei "
+        note(f"Basis: {len(sample)} Instanzen (Seeds 0-{len(sample) - 1}, nicht der eingestellte Seed) mit den eingestellten Werten. Klar heißt: Unterschied größer als zwei "
              "Standardfehler der gepaarten Differenz.")
         pdf.ln(3)
 

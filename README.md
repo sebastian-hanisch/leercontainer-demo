@@ -19,8 +19,8 @@ mittleren Vorlaufzeit liegt der Rest-Abstand unter 5 %, **nicht erst bei voller 
 ## Modell
 
 Zeit-Raum-Netz aus *P* Häfen × *T* Perioden. Jeder Hafen hat eine Netto-Einspeisung je Periode (positiv = freiwerdende Leercontainer, negativ = Bedarf), über den Horizont auf Summe 0 zentriert.
-Haltekanten (ein Hafen zur nächsten Periode) kosten wenig; Transportkanten (ein Hafen zu einem anderen) kosten distanzabhängig und brauchen eine Vorlaufzeit = Distanz/Geschwindigkeit (aufgerundet
-auf mindestens 1 Periode) – nichts fließt rückwärts in der Zeit. Eine Notleasing-Kante ersetzt eine harte Bilanzpflicht: unbefriedigter Bedarf löst eine feste Strafe je Container aus, realistisch
+Haltekanten (ein Hafen zur nächsten Periode) kosten wenig; Transportkanten (ein Hafen zu einem anderen) kosten distanzabhängig und brauchen eine Vorlaufzeit = Distanz/Geschwindigkeit (auf ganze
+Perioden gerundet, mindestens 1 Periode) – nichts fließt rückwärts in der Zeit. Eine Notleasing-Kante ersetzt eine harte Bilanzpflicht: unbefriedigter Bedarf löst eine feste Strafe je Container aus, realistisch
 als kurzfristiges Zumieten/Chartern gedeutet – das Modell ist dadurch immer lösbar. Formal im Expander „📐 Mathematische Formulierung" der App.
 
 ## Methodik – eine Reglerfamilie: das Vorschau-Fenster k
@@ -153,3 +153,5 @@ Tests: `python -m pytest tests/ -v`. Preset-Abstimmung: `python tools/tune_prese
 ---
 
 Gebaut mit Streamlit, Plotly und fpdf2.
+
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zum Thema: [Seefracht optimieren](https://sebastianhanisch.net/seefracht-optimierung.html).
