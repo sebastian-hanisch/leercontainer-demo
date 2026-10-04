@@ -153,7 +153,7 @@ with st.spinner("Rechne Stichprobe..."):
     samp = _compute_sample(sample_key)
 st.caption(f"Basis: {C.SAMPLE_INSTANCES} Instanzen (Seeds 0-{C.SAMPLE_INSTANCES - 1}, nicht Ihr Seed) mit Ihren Einstellungen. Rechenzeit gemessen: ein einzelner Min-Cost-Flow mit Dijkstra und "
           f"Potentialen löst die Standardgröße in wenigen Millisekunden, selbst {C.N_PORTS_RANGE[1]} Häfen × {C.N_PERIODS_RANGE[1]} Perioden (die größte einstellbare Instanz) noch in rund "
-          f"25-30 ms - ohne Knopf möglich, live bei jedem Reglerzug.")
+          f"25-30 ms (ein gerolltes Verfahren löst dagegen bis zu T solcher Fenster nacheinander und braucht bei vollem Fenster auf der größten Instanz etwa 0,1 s) - ohne Knopf möglich, live bei jedem Reglerzug.")
 
 
 def _show_verdict(label, v):

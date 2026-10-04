@@ -1,6 +1,6 @@
 # Leercontainer-Repositionierung: Wie weit vorausschauen? – Streamlit-Demo
 
-*(noch nicht deployed)*
+**[→ Demo live ausprobieren](https://sebastianhanisch-leercontainer-demo.streamlit.app/)**
 
 Interaktive Fall-Demo zur **Leercontainer-Repositionierung** einer Reederei: nach dem Löschen ist ein Container leer, an Überschusshäfen stapeln sich leere Boxen, an Mangelhäfen fehlen sie für neue
 Ladung. Die Demo beantwortet: **Wie weit muss eine Reederei vorausschauen (in Perioden), um nah am wirtschaftlichen Optimum zu bleiben, statt rein reaktiv zu planen oder den ganzen
