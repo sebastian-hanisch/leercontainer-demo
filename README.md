@@ -6,7 +6,7 @@ Interaktive Fall-Demo zur **Leercontainer-Repositionierung** einer Reederei: nac
 Ladung. Die Demo beantwortet: **Wie weit muss eine Reederei vorausschauen (in Perioden), um nah am wirtschaftlichen Optimum zu bleiben, statt rein reaktiv zu planen oder den ganzen
 Planungshorizont sehen zu müssen?**
 
-Teil des Portfolios für die Website „Sebastian Hanisch – Operations Research und Machine Learning", **Welle 1 der neuen Seefracht-Linie** (Schwesterlinie zur Hafen-Linie). Vehikel: ein
+Teil des Portfolios für die Website „Sebastian Hanisch – Operations Research und Machine Learning“, **Welle 1 der neuen Seefracht-Linie** (Schwesterlinie zur Hafen-Linie). Vehikel: ein
 Zeit-Raum-Netz aus Häfen und Perioden, gelöst als Min-Cost-Flow; koppelt inhaltlich an `freight_demo` (Hafenwahl je Sendung bestimmt die Container-Nachfrage je Hafen), ohne technische Abhängigkeit
 zwischen den Repos.
 
@@ -21,7 +21,7 @@ mittleren Vorlaufzeit liegt der Rest-Abstand unter 5 %, **nicht erst bei voller 
 Zeit-Raum-Netz aus *P* Häfen × *T* Perioden. Jeder Hafen hat eine Netto-Einspeisung je Periode (positiv = freiwerdende Leercontainer, negativ = Bedarf), über den Horizont auf Summe 0 zentriert.
 Haltekanten (ein Hafen zur nächsten Periode) kosten wenig; Transportkanten (ein Hafen zu einem anderen) kosten distanzabhängig und brauchen eine Vorlaufzeit = Distanz/Geschwindigkeit (auf ganze
 Perioden gerundet, mindestens 1 Periode) – nichts fließt rückwärts in der Zeit. Eine Notleasing-Kante ersetzt eine harte Bilanzpflicht: unbefriedigter Bedarf löst eine feste Strafe je Container aus, realistisch
-als kurzfristiges Zumieten/Chartern gedeutet – das Modell ist dadurch immer lösbar. Formal im Expander „📐 Mathematische Formulierung" der App.
+als kurzfristiges Zumieten/Chartern gedeutet – das Modell ist dadurch immer lösbar. Formal im Expander „📐 Mathematische Formulierung“ der App.
 
 ## Methodik – eine Reglerfamilie: das Vorschau-Fenster k
 
@@ -51,13 +51,13 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 ## Befunde und Korrekturen gegenüber dem Plan
 
-- **Rechenzeit-Behauptung des Plans korrigiert.** Der Detailplan nennt „unter 5 ms" für die größte Instanz (8 Häfen × 14 Perioden). Nachgemessen (AP 0) liegt ein einzelner Min-Cost-Flow-Solve dort
-  bei rund 25–30 ms; nur bei der **Standardgröße** (5 Häfen × 10 Perioden) stimmt „unter 5 ms" (gemessen 2,3–4,0 ms). Die App-Texte nennen jetzt beide Zahlen statt einer pauschalen Behauptung –
+- **Rechenzeit-Behauptung des Plans korrigiert.** Der Detailplan nennt „unter 5 ms“ für die größte Instanz (8 Häfen × 14 Perioden). Nachgemessen (AP 0) liegt ein einzelner Min-Cost-Flow-Solve dort
+  bei rund 25–30 ms; nur bei der **Standardgröße** (5 Häfen × 10 Perioden) stimmt „unter 5 ms“ (gemessen 2,3–4,0 ms). Die App-Texte nennen jetzt beide Zahlen statt einer pauschalen Behauptung –
   weiterhin schnell genug für eine Live-Berechnung ohne Knopf, aber die ursprüngliche Zahl war zu optimistisch für den Reglerrand.
 - **Preset-Population auf 40 statt 30–60 Instanzen festgelegt.** Die Plan-Schwellen (Abschnitt 7) reproduzieren exakt die Zahlen aus `messreihe_ecr/sweep.py`, das für die Vorlaufzeit-/
-  Volatilitäts-/Notleasing-Varianten `range(40)` verwendet (nur die Basis-Messreihe nutzte 60). Eine erste Probe mit 60 Instanzen ließ das Kriterium „Lange Route, k=6 < 3 %" knapp kippen
+  Volatilitäts-/Notleasing-Varianten `range(40)` verwendet (nur die Basis-Messreihe nutzte 60). Eine erste Probe mit 60 Instanzen ließ das Kriterium „Lange Route, k=6 < 3 %“ knapp kippen
   (+3,1 % statt +2,6 %) – mit 40 Instanzen reproduzieren alle fünf Presets die Plan-Zahlen mit Marge. Siehe `tools/PRESET_SWEEP.md`.
-- **Preset-Seed-Suche um ein Vorlaufzeit-Typizitätsband ergänzt.** Ein reiner Kosten-Kriterien-Filter hätte für „Lange Route" einen Seed mit einer für seine eigene Familie untypisch kurzen
+- **Preset-Seed-Suche um ein Vorlaufzeit-Typizitätsband ergänzt.** Ein reiner Kosten-Kriterien-Filter hätte für „Lange Route“ einen Seed mit einer für seine eigene Familie untypisch kurzen
   mittleren Vorlaufzeit zulassen können (gefunden: Seed 248, Vorlaufzeit 2,9 Perioden gegen einen Populationsmedian von 5,2). `tools/tune_presets.py` verlangt jetzt zusätzlich, dass die
   Vorlaufzeit der gezeigten Instanz zwischen dem 10. und 90. Perzentil ihrer eigenen Population liegt.
 - **`mean_markup` misst das Verhältnis der Mittelwerte, nicht den Mittelwert der Einzel-Aufschläge.** Naiv gemittelte Einzel-Prozentwerte verzerren stark, sobald eine Instanz ein kleines Optimum
@@ -72,7 +72,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 - **Vorlaufzeiten sind deterministisch** (keine Fahrzeitschwankung).
 - Kostenparameter (Haltekosten, Transportrate, Notleasing-Strafe) sind illustrativ, nicht an echten Frachtraten kalibriert.
 - Die Heuristik plant selbst im Fenster exakt (derselbe Min-Cost-Flow, nur mit kürzerem Horizont) – das isoliert sauber den Informationswert, misst aber **nicht**, wie viel eine einfache
-  Faustregel-Heuristik (z. B. „nächstgelegener Überschusshafen zuerst") zusätzlich verliert.
+  Faustregel-Heuristik (z. B. „nächstgelegener Überschusshafen zuerst“) zusätzlich verliert.
 
 ## Tests
 
@@ -89,7 +89,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
   mittlere Vorlaufzeit je zwischen dem 10. und 90. Perzentil); Kriterien sind nicht trivial erfüllt für ein falsches Preset; Reproduktion der Vorab-Messreihe. Zusätzlich (`test_stories.py`):
   jedes einzelne Abnahmekriterium an künstlichen Werten, die genau an seiner Schwelle kippen.
 - **Figuren** (`test_visualization.py`): Kosten-Kurve, Vergleichskurve, Hafenkarte (Farben, Pfeile je Transport, Notleasing-Ring) – alle Achsen fest.
-- **PDF** (`test_pdf_export.py`): Sonderzeichen-Bereinigung (fpdf2 stürzt bei „–", „€", Emoji ab), Inhalt für jede Diagnose-Art, Randfälle (kleinste/größte Instanz).
+- **PDF** (`test_pdf_export.py`): Sonderzeichen-Bereinigung (fpdf2 stürzt bei „–“, „€“, Emoji ab), Inhalt für jede Diagnose-Art, Randfälle (kleinste/größte Instanz).
 - **End-to-End** (`test_app.py`, AppTest): Skelett und Footer, jedes Preset, Permalink mit berechneter Grenze, alle Regler an Min und Max, die bedingte Meldung in allen drei Zuständen, Urteil in
   allen Zuständen, Vergleichstabelle, PDF, Texte.
 
@@ -128,7 +128,7 @@ Zusätzlich ein Fehler-Einbau-Test (`tools/mutation_check.py`, 40 Mutanten über
 - **Struktureller Dauerüberschuss/-mangel** als eigener Regler (feste globale Schieflage statt Summe 0 je Instanz).
 - **Kapazitätsgrenzen** auf Transportkanten (Schiffsraum) oder Häfen (Yard).
 - **Vorlaufzeit-Schwankung** statt deterministischer Vorlaufzeit.
-- **Vergleich gegen eine einfache Faustregel-Heuristik** (z. B. „nächstgelegener Überschusshafen zuerst") statt nur gegen sich selbst mit kürzerem Fenster.
+- **Vergleich gegen eine einfache Faustregel-Heuristik** (z. B. „nächstgelegener Überschusshafen zuerst“) statt nur gegen sich selbst mit kürzerem Fenster.
 - **Exakter Löser als eigener Tab**: nicht nötig – die volle Vorschau (k=Perioden−1) IST bereits die exakte Referenz, explizit im Text statt in einem separaten Tab.
 
 ## Verwandte Demos mit demselben mathematischen Modell
