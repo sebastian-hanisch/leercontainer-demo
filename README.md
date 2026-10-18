@@ -76,7 +76,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 ## Tests
 
-`python -m pytest tests/ -v` – 237 Tests, rund 3 Minuten. Zusammensetzung:
+`python -m pytest tests/ -v` – 239 Tests, rund 3 Minuten. Zusammensetzung:
 
 - **Szenario** (`test_scenario.py`): Häfen, Distanzen, Vorlaufzeit-Matrix, Netto-Einspeisung (Determinismus, Summe nahe 0), Fehlerfälle (zu wenige Häfen/Perioden).
 - **Min-Cost-Flow** (`test_flow.py`): Handinstanzen aus `messreihe_ecr/check.py` (Kausalität – Überschuss vor/nach Bedarf), Flusserhaltung, k=0 ohne jede Kante.
