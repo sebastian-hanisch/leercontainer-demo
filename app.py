@@ -47,11 +47,22 @@ st.title("📦 Leercontainer-Repositionierung: Wie weit vorausschauen?")
 st.markdown(
     """
 Nach dem Löschen ist ein Container leer: an **Überschusshäfen** stapeln sich leere Boxen, an **Mangelhäfen** fehlen sie, um neue Ladung zu stauen. Eine Reederei muss sie zwischen den Häfen
-umverteilen, bevor der nächste Bedarf entsteht - aber wie weit im Voraus muss sie den künftigen Bedarf überhaupt kennen? Diese Demo zeigt, wie teuer reines Reagieren ist und wie wenig
+umverteilen, bevor der nächste Bedarf entsteht - aber wie weit im Voraus muss sie den künftigen Bedarf überhaupt kennen? Diese Demo zeigt, wie teuer es ist, gar nicht vorauszuplanen (k=0), und wie wenig
 **Vorschau-Fenster** nötig ist, um trotzdem nah am Optimum zu bleiben. Wie das Modell funktioniert, steht im Expander "Wie funktioniert diese Demo?" weiter unten, die formale Beschreibung im
 Expander "📐 Mathematische Formulierung".
 """
 )
+
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/leercontainer-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Nach dem Löschen der Ladung ist ein Container leer. In manchen Häfen sammeln sich leere Container, in anderen fehlen sie für die nächste Ladung. Eine Reederei muss sie umverteilen, aber jede Fahrt dauert und wirkt erst bei der Ankunft. Die Demo fragt, wie weit die Planerin in die Zukunft sehen muss. Das **Vorschau-Fenster** gibt an, wie viele Zeitabschnitte sie überblickt. Wer nur den laufenden Abschnitt kennt, kann nichts rechtzeitig losschicken und mietet fehlende Container in der Not an. Eine Vorschau, die etwas länger ist als die durchschnittliche Fahrt, bringt die Kosten schon nah ans Optimum. Es ist ein stark vereinfachtes Modell mit erfundenen Kosten und genauer Sicht innerhalb des Fensters.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/leercontainer-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
 
 st.caption("🎯 Schnellstart – ein Beispielszenario laden:")
 PRESET_HELP = {
@@ -211,7 +222,7 @@ unbefriedigter Bedarf löst eine feste Strafe je Container aus, realistisch gede
 Zeitstruktur real nicht mehr rechtzeitig erreichbar ist.
 
 **Die eine Reglerfamilie: das Vorschau-Fenster k.** Bei jeder Periode wird derselbe Min-Cost-Flow gelöst, aber nur über das Fenster [t, t+k]; ausgeführt werden nur die bei t abgehenden
-Entscheidungen, dann rollt die Planung einen Schritt weiter (rollierender Horizont). k=0 kennt nur die gerade abgelaufene Periode (rein reaktiv), k=Perioden-1 kennt von Anfang an den ganzen
+Entscheidungen, dann rollt die Planung einen Schritt weiter (rollierender Horizont). k=0 (rein reaktiv) erlaubt weder Lagern noch Umverteilen: jeder Bedarf zahlt die Notleasing-Strafe, jeder Überschuss geht verloren - das ist kein vernünftiges reaktives Verfahren, sondern die Nullreferenz; k=Perioden-1 kennt von Anfang an den ganzen
 Horizont - das ist bereits das exakte Optimum, **kein separater Exakt-Algorithmus nötig**: derselbe Löser, nur mit maximalem Fenster.
 
 **Faustregel k* ≈ 1,6 × mittlere Vorlaufzeit.** Die Vorlaufzeit ist die Zeit, die eine Transport-Entscheidung zum Wirken braucht; die nötige Vorschau skaliert mit ihr, nicht mit dem ganzen
@@ -219,7 +230,7 @@ Planungshorizont. Empirisch geprüft (siehe Kurve oben), nicht bewiesen - der Re
 
 **Grenzen dieses Modells** (bewusst so gewählt, damit die Aussage ehrlich bleibt):
 
-- Die Vorschau ist **perfekt** innerhalb des Fensters (kein Prognosefehler) - das misst den **Wert von Information**, nicht Robustheit gegen Prognoseunschärfe.
+- Die Vorschau ist **perfekt** innerhalb des Fensters (kein Prognosefehler) - das misst den **Wert von Information**, nicht Robustheit gegen Prognoseunschärfe. Die Referenz k=0 ist keine sinnvolle reaktive Regel (sie lagert und verteilt nichts um); die Aufschläge gegen k=0 messen den Gewinn gegenüber gar keiner Planung, nicht gegenüber einer vernünftigen reaktiven Regel.
 - **Kein struktureller Dauerüberschuss/-mangel** (Summe 0 je Instanz); echte globale Ungleichgewichte (z. B. ein starkes Export-Import-Ungleichgewicht einer Region) sind nicht modelliert.
 - **Transport- und Lagerkapazität sind unbegrenzt** (kein Wettbewerb mit bezahlter Fracht um Schiffsraum, keine Yard-Grenze).
 - **Vorlaufzeiten sind deterministisch** (keine Fahrzeitschwankung).
@@ -228,6 +239,26 @@ Planungshorizont. Empirisch geprüft (siehe Kurve oben), nicht bewiesen - der Re
     )
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/leercontainer-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind $P$ Häfen, $T$ Perioden, die Netto-Einspeisung $b(p,t)$ je Hafen und Periode, die Vorlaufzeiten zwischen den Häfen und ein Vorschau-Fenster $k$. Gesucht sind die Gesamtkosten aus Halten, Transport und Notleasing, wenn in jeder Periode nur über $[t, t+k]$ geplant wird, und ihr Abstand zum Optimum bei voller Vorschau.
+
+| Symbol | Bedeutung |
+|---|---|
+| $P$, $T$ | Zahl der Häfen bzw. der Perioden |
+| $b(p,t)$ | Netto-Einspeisung von Hafen $p$ in Periode $t$: positiv = freiwerdende Leercontainer, negativ = Bedarf |
+| $\mathrm{dist}(p,q)$ | Distanz zwischen den Häfen $p$ und $q$ |
+| $v$ | Schiffsgeschwindigkeit (relativ) |
+| $\mathrm{lead}(p,q)$ | Vorlaufzeit von $p$ nach $q$ in ganzen Perioden, mindestens 1 |
+| $h$, $c$, $\pi$ | Kosten je Container: Halten (je Periode), Transport (je Distanzeinheit), Notleasing (Strafe je fehlendem Container) |
+| $k$ | Vorschau-Fenster: 0 = rein reaktiv, $T-1$ = volle Vorschau (Optimum) |
+| $k^\ast$ | Faustregel für das nötige $k$, abgeleitet aus der mittleren Vorlaufzeit |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/leercontainer-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Zeit-Raum-Netz.** Knoten $(p, t)$ für Hafen $p \in \{1, \dots, P\}$, Periode $t \in \{0, \dots, T-1\}$; Netto-Einspeisung $b(p, t)$, über den Horizont zentriert auf $\sum_{p,t} b(p,t) = 0$.

@@ -12,7 +12,7 @@ zwischen den Repos.
 
 ## Warum dieses Problem
 
-Reine Reaktion (nur die gerade abgelaufene Periode kennen) ist in der Standardinstanz massiv teurer als das Optimum – kein Grenzfall, robust über fünf unabhängige Messreihen (Vorlaufzeit,
+Reine Reaktion (k=0: nichts lagern oder umverteilen, jeder Bedarf geht ins Notleasing) ist in der Standardinstanz massiv teurer als das Optimum – kein Grenzfall, robust über fünf unabhängige Messreihen (Vorlaufzeit,
 Volatilität, Notleasing-Preis, Hafenzahl, siehe `seefracht-planung/messreihe_ecr/ERGEBNIS.md`). Aber die Lücke schließt sich schnell: schon bei einer Vorschau von etwa der 1,5- bis 2-fachen
 mittleren Vorlaufzeit liegt der Rest-Abstand unter 5 %, **nicht erst bei voller Horizontsicht**. Der Aufhänger ist deshalb **wie weit** vorausschauen, nicht **ob**.
 
@@ -27,7 +27,7 @@ als kurzfristiges Zumieten/Chartern gedeutet – das Modell ist dadurch immer l�
 
 Anders als bei den meisten Hafen-Demos gibt es hier **eine stetige Familie über einen einzigen Parameter** k, keine drei qualitativ verschiedenen Regeln:
 
-- **🙈 Rein reaktiv (k=0)**: kennt nur die gerade abgelaufene Periode – die Referenz aller Vergleiche.
+- **🙈 Rein reaktiv (k=0)**: das Fenster ist eine einzige Periode, es gibt weder Halte- noch Transportkante – jeder Bedarf zahlt die volle Notleasing-Strafe, jeder Überschuss geht verloren (Kosten = Strafe mal Gesamtbedarf). Das ist kein vernünftiges reaktives Verfahren, sondern die Nullreferenz aller Vergleiche.
 - **👀 Eingestellte Vorschau (k)**: plant bei jeder Periode denselben Min-Cost-Flow, aber nur über das Fenster [t, t+k]; führt nur die dort abgehenden Entscheidungen aus, rollt weiter.
 - **🔮 Volle Vorschau (k=Perioden−1)**: kennt von Anfang an den ganzen Horizont = das exakte Optimum. **Kein separater Exakt-Algorithmus**: derselbe Löser, nur mit maximalem Fenster.
 
@@ -41,7 +41,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 | Frage | Befund | Test |
 |---|---|---|
-| Wie teuer ist reine Reaktion? | k=0 kostet **+156 %** gegenüber dem Optimum in der Standardinstanz (Population 40 Instanzen); über die vier Presets mit einem k=0-Kriterium zwischen +156 % und +234 % | `test_preset_stories.py`, `test_evaluation.py` |
+| Wie teuer ist k=0 (gar keine Vorausplanung)? | k=0 kostet **+156 %** gegenüber dem Optimum in der Standardinstanz (Population 40 Instanzen); über die vier Presets mit einem k=0-Kriterium zwischen +156 % und +234 % | `test_preset_stories.py`, `test_evaluation.py` |
 | Wie schnell schließt sich die Lücke? | Bei k=4 (≈1,6× mittlere Vorlaufzeit) nur noch **+5,2 %** Aufschlag in der Standardinstanz | `test_preset_stories.py` |
 | Skaliert die nötige Vorschau mit der Vorlaufzeit oder mit T? | Mit der Vorlaufzeit: kurze Routen brauchen ab k≈3 kaum noch Vorschau (+8,3 % bei k=3), lange Routen erst ab k≈6 (+2,6 % bei k=6) – nie bei fast dem ganzen Horizont | `test_preset_stories.py` |
 | Ist mehr Vorschau je verschlechternd? | Nein: Monotonie über 25 Zufallsinstanzen ausnahmslos bestätigt, 0 Verletzungen | `test_rolling.py::test_monotonicity_more_lookahead_never_hurts` |
@@ -66,7 +66,7 @@ Standardinstanz (5 Häfen, 10 Perioden, Geschwindigkeit 22, Volatilität 3, Notl
 
 ## Ehrliche Grenzen
 
-- Die Vorschau ist **perfekt** innerhalb des Fensters (kein Prognosefehler) – das misst den **Wert von Information**, nicht Robustheit gegen Prognoseunschärfe.
+- Die Vorschau ist **perfekt** innerhalb des Fensters (kein Prognosefehler) – das misst den **Wert von Information**, nicht Robustheit gegen Prognoseunschärfe. Die Referenz k=0 ist keine sinnvolle reaktive Regel (sie lagert und verteilt nichts um); die Aufschläge gegen k=0 messen den Gewinn gegenüber gar keiner Planung, nicht gegenüber einer vernünftigen reaktiven Regel.
 - **Kein struktureller Dauerüberschuss/-mangel** (Summe 0 je Instanz); echte globale Ungleichgewichte (z. B. ein starkes Export-Import-Ungleichgewicht einer Region) sind nicht modelliert.
 - **Transport- und Lagerkapazität sind unbegrenzt** (kein Wettbewerb mit bezahlter Fracht um Schiffsraum, keine Yard-Grenze).
 - **Vorlaufzeiten sind deterministisch** (keine Fahrzeitschwankung).

@@ -2,9 +2,9 @@
 übernommen (run_global_exact, run_rolling_horizon), um `record=True` erweitert, damit die App die
 je Periode geplanten Transporte für den Zeitschrittregler zeigen kann (Abschnitt 6/8 des Detailplans).
 
-k=0: rein reaktiv (kennt nur die gerade abgelaufene Periode: das Fenster [t, t] hat keine Halte- oder
-Transportkante, jeder unmittelbare Bedarf zahlt also die volle Notleasing-Strafe, jeder Ueberschuss
-bleibt ungenutzt bis er - falls überhaupt noch im Fenster - später gebraucht wird).
+k=0: Nullreferenz, kein vernünftiges reaktives Verfahren (das Fenster [t, t] hat keine Halte- oder
+Transportkante: jeder Bedarf zahlt die volle Notleasing-Strafe, jeder Ueberschuss geht verloren, held
+bleibt 0; die Kosten sind Strafe mal Gesamtbedarf).
 k=T-1 ab der ersten Periode: sieht von Anfang an den ganzen Horizont -> reproduziert exakt den
 einmaligen globalen Solve (siehe tests/test_rolling.py, wie messreihe_ecr/check.py)."""
 from dataclasses import dataclass, field

@@ -40,8 +40,8 @@ MODE_LABELS = {
 }
 MODE_SHORT = {MODE_REACTIVE: "Rein reaktiv", MODE_CONFIGURED: "Eingestellt", MODE_FULL: "Volle Vorschau"}
 MODE_DESCRIPTIONS = {
-    MODE_REACTIVE: "Kennt nur die gerade abgelaufene Periode, keine Vorausplanung. Jeder Bedarf, der nicht schon jetzt gedeckt ist, zahlt die volle Notleasing-Strafe. "
-                   "Die Referenz aller Vergleiche in dieser Demo: die Kosten des Nichtwissens.",
+    MODE_REACTIVE: "Keine Vorausplanung: weder Lagern noch Umverteilen, jeder Bedarf zahlt die volle Notleasing-Strafe, jeder Überschuss geht verloren. "
+                   "Die Nullreferenz aller Vergleiche in dieser Demo (kein vernünftiges reaktives Verfahren): die Kosten des Nichtwissens.",
     MODE_CONFIGURED: "Plant bei jeder Periode exakt über das Fenster [t, t+k], führt nur die bei t abgehenden Entscheidungen aus und rollt einen Schritt weiter. "
                      "Dieselbe Rechnung wie bei rein reaktiv und voller Vorschau, nur mit einem mittleren Fenster - die kluge Mitte.",
     MODE_FULL: "Kennt den ganzen Planungshorizont von der ersten Periode an = das exakte Optimum. Kein eigener Exakt-Algorithmus: derselbe Löser, nur mit maximalem Fenster.",

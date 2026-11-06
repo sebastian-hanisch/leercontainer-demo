@@ -77,7 +77,7 @@ def test_skeleton_and_footer():
     assert len(at.title) == 1 and "Leercontainer" in at.title[0].value
     assert any(v.value.startswith("## 🎯") for v in at.markdown)
     assert any(v.value.startswith("### 📐") for v in at.markdown)
-    assert [e.label for e in at.expander] == ["🔧 Wie wir das erreichen – Vorschau im Vergleich", "Wie funktioniert diese Demo?", "📐 Mathematische Formulierung"]
+    assert [e.label for e in at.expander] == ["💬 In einfachen Worten", "🔧 Wie wir das erreichen – Vorschau im Vergleich", "Wie funktioniert diese Demo?", "📐 Mathematische Formulierung"]
     assert any(c.value == FOOTER for c in at.caption)
     presets = [b.label for b in at.button if b.label in C.PRESETS]
     assert presets == list(C.PRESETS) and len(presets) == 5 and all(len(n) <= 22 for n in presets)
@@ -310,9 +310,9 @@ def test_pdf_download_button_is_offered():
 
 def test_texts_state_the_model_the_rule_of_thumb_and_the_limits():
     at = fresh()
-    text = "\n".join(m.value for m in at.expander[1].markdown)
+    text = "\n".join(m.value for m in at.expander[2].markdown)
     for needle in ("Notleasing-Kante", "Vorschau-Fenster k", "Faustregel", "kein separater Exakt-Algorithmus", "Wert von Information", "Größenordnungen aus einem vereinfachten Modell"):
         assert needle in text, needle
-    math_text = "\n".join(m.value for m in at.expander[2].markdown)
+    math_text = "\n".join(m.value for m in at.expander[3].markdown)
     for needle in ("Zeit-Raum-Netz", "Dijkstra", "SPFA", "k^\\ast", "2 \\, \\mathrm{SE}"):
         assert needle in math_text, needle

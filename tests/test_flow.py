@@ -54,7 +54,7 @@ def test_flow_conservation_holds_for_random_windows():
 
 def test_no_edges_can_move_backward_in_time_by_construction():
     """Bei k=0 (Fenster = eine einzige Periode) gibt es keine Halte- oder Transportkante: jeder
-    Bedarf zahlt zwangsläufig die volle Strafe, jeder Ueberschuss bleibt ungenutzt."""
+    Bedarf zahlt zwangsläufig die volle Strafe, jeder Ueberschuss geht verloren (nichts wird gehalten oder verlegt)."""
     inst = dict(p=2, T=3, coords=[(0, 0), (22, 0)], dist=[[0, 22], [22, 0]], lead=[[0, 1], [1, 0]], b=[[5, 0, 0], [-3, 0, 0]])
     cost, transport, hold, shortfall = solve_window(inst, 0, 0, [0, 0], {}, HOLD_COST, RATE, PENALTY)
     assert transport == {} and hold == {}
